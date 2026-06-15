@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Solutions — Central de Chamados</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+ 
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="6" fill="#1E6FD9"/>
+            <path d="M6 14h4l3-7 4 14 3-10 2 3h4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <span class="logo-name">Tech Solutions</span>
+          <span class="logo-sub">Central de Chamados</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          Sistema Online
+        </div>
+        <button class="btn-primary" id="btn-novo-chamado">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Novo Chamado
+        </button>
+      </div>
+    </div>
+  </header>
+ 
+  <!-- DASHBOARD STATS -->
+  <section class="dashboard">
+    <div class="stats-grid">
+      <div class="stat-card" id="stat-total">
+        <div class="stat-icon stat-icon--blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M5 7h10M5 10h7M5 13h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="stat-number" id="count-total">0</div>
+          <div class="stat-label">Total de Chamados</div>
+        </div>
+      </div>
+      <div class="stat-card" id="stat-critica">
+        <div class="stat-icon stat-icon--red">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L2 17h16L10 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 8v4M10 14v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="stat-number" id="count-critica">0</div>
+          <div class="stat-label">Prioridade Crítica</div>
+        </div>
+      </div>
+      <div class="stat-card" id="stat-alta">
+        <div class="stat-icon stat-icon--orange">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v5M10 13v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="stat-number" id="count-alta">0</div>
+          <div class="stat-label">Prioridade Alta</div>
+        </div>
+      </div>
+      <div class="stat-card" id="stat-media">
+        <div class="stat-icon stat-icon--yellow">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M7 10h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="stat-number" id="count-media">0</div>
+          <div class="stat-label">Prioridade Média</div>
+        </div>
+      </div>
+      <div class="stat-card" id="stat-baixa">
+        <div class="stat-icon stat-icon--green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="stat-number" id="count-baixa">0</div>
+          <div class="stat-label">Prioridade Baixa</div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- MAIN CONTENT -->
+  <main class="main">
+ 
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="filter-left">
+        <h2 class="section-title">Chamados em Andamento</h2>
+      </div>
+      <div class="filter-right">
+        <div class="search-wrap">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <input type="text" id="search-input" class="search-input" placeholder="Buscar chamados..." />
+        </div>
+        <select id="filter-prioridade" class="filter-select">
+          <option value="">Todas as prioridades</option>
+          <option value="Crítica">Crítica</option>
+          <option value="Alta">Alta</option>
+          <option value="Média">Média</option>
+          <option value="Baixa">Baixa</option>
+        </select>
+        <select id="filter-classificacao" class="filter-select">
+          <option value="">Todas as classificações</option>
+          <option value="Incidente">Incidente</option>
+          <option value="Problema">Problema</option>
+          <option value="Requisição">Requisição</option>
+          <option value="Mudança">Mudança</option>
+        </select>
+      </div>
+    </div>
+ 
+    <!-- TICKETS TABLE -->
+    <div class="table-wrap">
+      <table class="tickets-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Classificação</th>
+            <th>Prioridade</th>
+            <th>Impacto</th>
+            <th>Possível Causa</th>
+            <th>Tempo Est.</th>
+            <th>Aberto em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tickets-tbody">
+        </tbody>
+      </table>
+      <div id="empty-state" class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="8" y="8" width="48" height="48" rx="8" stroke="#6B7A8D" stroke-width="2"/><path d="M20 24h24M20 32h16M20 40h10" stroke="#6B7A8D" stroke-width="2" stroke-linecap="round"/></svg>
+        <p>Nenhum chamado registrado ainda.</p>
+        <span>Clique em <strong>Novo Chamado</strong> para começar.</span>
+      </div>
+    </div>
+  </main>
+ 
+  <!-- MODAL -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-title">Novo Chamado</h3>
+          <p class="modal-subtitle" id="modal-subtitle">Preencha os campos abaixo para registrar o chamado</p>
+        </div>
+        <button class="modal-close" id="btn-close-modal">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+ 
+      <form id="chamado-form" class="modal-form" novalidate>
+        <input type="hidden" id="field-id" />
+ 
+        <div class="form-row form-row--3">
+          <div class="form-group">
+            <label class="form-label" for="field-classificacao">
+              Classificação <span class="required">*</span>
+            </label>
+            <select id="field-classificacao" class="form-select" required>
+              <option value="">Selecione...</option>
+              <option value="Incidente">Incidente</option>
+              <option value="Problema">Problema</option>
+              <option value="Requisição">Requisição</option>
+              <option value="Mudança">Mudança</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-prioridade">
+              Prioridade <span class="required">*</span>
+            </label>
+            <select id="field-prioridade" class="form-select" required>
+              <option value="">Selecione...</option>
+              <option value="Crítica">Crítica</option>
+              <option value="Alta">Alta</option>
+              <option value="Média">Média</option>
+              <option value="Baixa">Baixa</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-impacto">
+              Impacto <span class="required">*</span>
+            </label>
+            <select id="field-impacto" class="form-select" required>
+              <option value="">Selecione...</option>
+              <option value="Crítico — Empresa toda">Crítico — Empresa toda</option>
+              <option value="Alto — Múltiplos setores">Alto — Múltiplos setores</option>
+              <option value="Médio — Um setor">Médio — Um setor</option>
+              <option value="Baixo — Usuário único">Baixo — Usuário único</option>
+            </select>
+          </div>
+        </div>
+ 
+        <div class="form-row form-row--2">
+          <div class="form-group">
+            <label class="form-label" for="field-causa">
+              Possível Causa <span class="required">*</span>
+            </label>
+            <textarea id="field-causa" class="form-textarea" rows="3" placeholder="Descreva a possível causa do chamado..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-diagnostico">
+              Procedimentos de Diagnóstico
+            </label>
+            <textarea id="field-diagnostico" class="form-textarea" rows="3" placeholder="Liste os procedimentos de diagnóstico a realizar..."></textarea>
+          </div>
+        </div>
+ 
+        <div class="form-group">
+          <label class="form-label" for="field-solucao">
+            Solução Proposta
+          </label>
+          <textarea id="field-solucao" class="form-textarea" rows="3" placeholder="Descreva a solução proposta para este chamado..."></textarea>
+        </div>
+ 
+        <div class="form-row form-row--2">
+          <div class="form-group">
+            <label class="form-label" for="field-tempo">
+              Tempo Estimado de Atendimento <span class="required">*</span>
+            </label>
+            <select id="field-tempo" class="form-select" required>
+              <option value="">Selecione...</option>
+              <option value="< 1 hora">&lt; 1 hora</option>
+              <option value="1–4 horas">1–4 horas</option>
+              <option value="4–8 horas">4–8 horas</option>
+              <option value="1–2 dias">1–2 dias</option>
+              <option value="3–5 dias">3–5 dias</option>
+              <option value="> 5 dias">&gt; 5 dias</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-setor">
+              Setor Solicitante
+            </label>
+            <input type="text" id="field-setor" class="form-input" placeholder="Ex: TI, Financeiro, RH..." />
+          </div>
+        </div>
+ 
+        <div id="form-error" class="form-error hidden">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span id="form-error-text">Preencha todos os campos obrigatórios.</span>
+        </div>
+ 
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="btn-cancel">Cancelar</button>
+          <button type="submit" class="btn-primary" id="btn-submit">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="btn-submit-text">Registrar Chamado</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+ 
+  <!-- VIEW MODAL -->
+  <div id="view-overlay" class="modal-overlay hidden">
+    <div class="modal modal--view" id="view-modal">
+      <div class="modal-header">
+        <div>
+          <div class="view-id-badge" id="view-id-badge"></div>
+          <h3 class="modal-title" id="view-title">Detalhes do Chamado</h3>
+        </div>
+        <button class="modal-close" id="btn-close-view">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="view-body" id="view-body"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-close-view-2">Fechar</button>
+        <button class="btn-primary" id="btn-edit-from-view">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 2l3 3-9 9H2v-3L11 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          Editar
+        </button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- CONFIRM DELETE MODAL -->
+  <div id="delete-overlay" class="modal-overlay hidden">
+    <div class="modal modal--small">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirmar Exclusão</h3>
+        <button class="modal-close" id="btn-close-delete">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <p class="delete-msg">Tem certeza que deseja excluir o chamado <strong id="delete-chamado-id"></strong>? Esta ação não pode ser desfeita.</p>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-cancel-delete">Cancelar</button>
+        <button class="btn-danger" id="btn-confirm-delete">Excluir Chamado</button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden">
+    <svg class="toast-icon" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span id="toast-text"></span>
+  </div>
+ 
+  <script src="app.js"></script>
+</body>
+</html>
+ 
