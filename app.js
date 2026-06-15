@@ -356,50 +356,230 @@ function seedIfEmpty() {
   if (chamados.length > 0) return;
  
   const seeds = [
+    // CHAMADO 01 – Financeiro: impressora não imprime boletos
     {
-      classificacao: 'Incidente',
-      prioridade: 'Crítica',
-      impacto: 'Crítico — Empresa toda',
-      causa: 'Servidor de autenticação não responde após queda de energia.',
-      diagnostico: 'Verificar logs do servidor. Checar UPS e link de rede. Testar conectividade VPN.',
-      solucao: 'Reinicializar serviço de autenticação. Acionar fornecedor do nobreak.',
-      tempo: '< 1 hora',
-      setor: 'TI / Infraestrutura',
-    },
-    {
+      setor: 'Financeiro',
       classificacao: 'Incidente',
       prioridade: 'Alta',
       impacto: 'Alto — Múltiplos setores',
-      causa: 'E-mails corporativos não estão sendo entregues — possível bloqueio de relay.',
-      diagnostico: 'Verificar filas no servidor de e-mail. Checar blacklists de IP. Analisar logs SMTP.',
-      solucao: 'Limpar fila de mensagens. Solicitar remoção de blacklist. Verificar configurações SPF/DKIM.',
+      causa: 'Impressora utilizada para emissão de boletos deixou de imprimir. Possível falha no driver, fila de impressão travada ou problema físico no equipamento.',
+      diagnostico: 'Verificar se a impressora está ligada e online. Limpar a fila de impressão no Windows. Reinstalar ou atualizar o driver. Testar impressão de página de diagnóstico. Checar cabos e conexão de rede/USB.',
+      solucao: 'Reiniciar serviço de spooler de impressão. Reinstalar driver atualizado do fabricante. Se hardware com defeito, substituir por impressora reserva imediatamente para não bloquear emissão de boletos.',
       tempo: '1–4 horas',
-      setor: 'Suporte',
     },
+    // CHAMADO 02 – Recepção: sem internet em um único computador
     {
-      classificacao: 'Problema',
+      setor: 'Recepção',
+      classificacao: 'Incidente',
       prioridade: 'Média',
-      impacto: 'Médio — Um setor',
-      causa: 'Lentidão no ERP do setor Financeiro após atualização de módulo.',
-      diagnostico: 'Analisar queries lentas no banco. Verificar índices. Comparar performance pré/pós atualização.',
-      solucao: 'Reindexar tabelas afetadas. Reverter atualização se necessário. Abrir chamado com fornecedor.',
-      tempo: '4–8 horas',
-      setor: 'Financeiro',
+      impacto: 'Baixo — Usuário único',
+      causa: 'Computador isolado sem acesso à internet enquanto demais funcionam normalmente. Possível falha na placa de rede, configuração de IP incorreta ou porta de switch com defeito.',
+      diagnostico: 'Verificar status do adaptador de rede no gerenciador de dispositivos. Testar com cabo de rede diferente. Executar ipconfig /release e /renew. Pingar gateway padrão. Trocar porta do switch.',
+      solucao: 'Reconfigurar adaptador de rede para DHCP automático. Substituir cabo de rede. Se placa de rede com defeito, instalar adaptador USB-Ethernet como alternativa temporária.',
+      tempo: '1–4 horas',
     },
+    // CHAMADO 03 – RH: esqueceu senha
     {
+      setor: 'Recursos Humanos',
       classificacao: 'Requisição',
       prioridade: 'Baixa',
       impacto: 'Baixo — Usuário único',
-      causa: 'Usuário solicita troca de equipamento — notebook com defeito na bateria.',
-      diagnostico: 'Confirmar modelo e número de série. Verificar estoque de substitutos.',
-      solucao: 'Provisionar equipamento reserva. Encaminhar notebook para reparo ou descarte.',
+      causa: 'Colaboradora esqueceu a senha de acesso ao sistema corporativo. Sem indício de comprometimento de segurança.',
+      diagnostico: 'Verificar se a conta está bloqueada no Active Directory. Confirmar identidade da solicitante por canal secundário (e-mail pessoal ou telefone cadastrado). Registrar ocorrência no log de resets.',
+      solucao: 'Redefinir senha via painel de administração do AD/sistema corporativo. Orientar a usuária a criar senha forte seguindo a política de senhas da empresa. Habilitar autenticação em dois fatores se disponível.',
+      tempo: '< 1 hora',
+    },
+    // CHAMADO 04 – Comercial: lentidão no sistema de vendas
+    {
+      setor: 'Comercial',
+      classificacao: 'Problema',
+      prioridade: 'Alta',
+      impacto: 'Alto — Múltiplos setores',
+      causa: 'Sistema de vendas com lentidão excessiva, impactando operações comerciais. Possível sobrecarga de servidor, consultas SQL não otimizadas ou recursos insuficientes.',
+      diagnostico: 'Monitorar CPU, RAM e I/O do servidor de aplicação e banco de dados. Identificar queries lentas com ferramentas de profiling. Verificar número de conexões simultâneas. Analisar logs de erro da aplicação.',
+      solucao: 'Otimizar índices e queries identificadas como gargalo. Aumentar recursos do servidor (vertical scaling) ou balancear carga. Agendar manutenção preventiva com fornecedor do sistema.',
+      tempo: '4–8 horas',
+    },
+    // CHAMADO 05 – Diretoria: notebook não liga após queda de energia
+    {
+      setor: 'Diretoria',
+      classificacao: 'Incidente',
+      prioridade: 'Crítica',
+      impacto: 'Alto — Múltiplos setores',
+      causa: 'Notebook do diretor não liga após queda de energia. Possível dano à placa-mãe, fonte interna ou HD/SSD causado por pico de tensão.',
+      diagnostico: 'Testar com carregador reserva. Verificar LED de carga. Tentar inicialização com bateria removida. Conectar monitor externo para descartar falha de display. Se sem resposta, encaminhar para diagnóstico técnico especializado.',
+      solucao: 'Disponibilizar equipamento reserva imediatamente para minimizar impacto na diretoria. Encaminhar notebook para reparo ou, se irreparável, providenciar substituição com urgência e restaurar backup dos dados.',
+      tempo: '< 1 hora',
+    },
+    // CHAMADO 06 – Almoxarifado: planilha corrompida
+    {
+      setor: 'Almoxarifado',
+      classificacao: 'Incidente',
+      prioridade: 'Média',
+      impacto: 'Médio — Um setor',
+      causa: 'Arquivo de planilha de controle de estoque está corrompido. Possível falha ao salvar, desligamento abrupto ou setor de disco com erro.',
+      diagnostico: 'Tentar abrir o arquivo com o recurso de recuperação do Excel. Verificar se há versões anteriores salvas (histórico de versões). Checar integridade do HD com ferramentas SMART. Verificar se o arquivo está em servidor de rede.',
+      solucao: 'Recuperar última versão íntegra do backup diário. Reparar arquivo com ferramenta de recuperação do Office. Orientar usuário sobre procedimento correto de fechamento e salvamento. Verificar disco para setores defeituosos.',
+      tempo: '1–4 horas',
+    },
+    // CHAMADO 07 – Atendimento: falhas em VoIP
+    {
+      setor: 'Atendimento',
+      classificacao: 'Incidente',
+      prioridade: 'Alta',
+      impacto: 'Alto — Múltiplos setores',
+      causa: 'Ligações VoIP com falhas e cortes constantes no setor de atendimento. Possível jitter elevado, perda de pacotes na rede ou sobrecarga de banda.',
+      diagnostico: 'Executar teste de qualidade VoIP (MOS, jitter, latência, perda de pacotes). Verificar configuração de QoS nos switches e roteador. Analisar tráfego com Wireshark na VLAN de voz. Checar status do link com provedor.',
+      solucao: 'Configurar/ajustar QoS priorizando tráfego de voz na rede. Se problema no link, acionar provedor de internet. Verificar firmwares dos telefones IP e servidor PBX. Considerar codec mais robusto (G.711 vs G.729).',
+      tempo: '4–8 horas',
+    },
+    // CHAMADO 08 – Marketing: falta de espaço em disco
+    {
+      setor: 'Marketing',
+      classificacao: 'Problema',
+      prioridade: 'Média',
+      impacto: 'Baixo — Usuário único',
+      causa: 'Estação de trabalho de Marketing com disco quase cheio, causando lentidão e impossibilidade de salvar arquivos. Acúmulo de arquivos de mídia e temporários.',
+      diagnostico: 'Executar análise de disco (WinDirStat ou TreeSize). Identificar pastas com maior consumo. Verificar arquivos temporários, lixeira e cache de aplicativos. Avaliar se há duplicatas de arquivos de projeto.',
+      solucao: 'Limpeza de arquivos temporários e desnecessários. Mover projetos antigos para servidor de arquivos ou armazenamento externo. Se recorrente, provisionar HD adicional ou SSD de maior capacidade.',
+      tempo: '1–4 horas',
+    },
+    // CHAMADO 09 – Produção: nenhum computador acessa sistema de produção
+    {
+      setor: 'Produção',
+      classificacao: 'Incidente',
+      prioridade: 'Crítica',
+      impacto: 'Crítico — Empresa toda',
+      causa: 'Nenhum computador do setor de Produção consegue acessar o sistema. Possível queda do servidor de aplicação, falha de rede no segmento do setor ou problema no serviço de autenticação.',
+      diagnostico: 'Verificar status do servidor de produção (ping, serviços, logs). Checar conectividade do switch do setor. Testar acesso ao sistema a partir de outro segmento de rede. Verificar logs de autenticação e firewall.',
+      solucao: 'Reiniciar serviços da aplicação de produção. Se falha de rede, isolar e substituir equipamento defeituoso. Ativar plano de contingência para operação manual enquanto o sistema é restabelecido. Comunicar gestão imediatamente.',
+      tempo: '< 1 hora',
+    },
+    // CHAMADO 10 – Compras: não consegue enviar e-mails
+    {
+      setor: 'Compras',
+      classificacao: 'Incidente',
+      prioridade: 'Média',
+      impacto: 'Médio — Um setor',
+      causa: 'Usuário do setor de Compras não consegue enviar e-mails para fornecedores. Possível problema na conta do cliente de e-mail, senha expirada ou bloqueio pelo servidor SMTP.',
+      diagnostico: 'Verificar configurações SMTP no cliente de e-mail. Testar envio via webmail. Checar se a senha da conta de e-mail está válida. Verificar logs no servidor de e-mail para erros de autenticação ou bloqueio.',
+      solucao: 'Reconfigurar conta de e-mail com credenciais atualizadas. Se senha expirada, redefinir. Verificar cota da caixa de entrada. Se bloqueio por servidor, liberar junto ao administrador de e-mail.',
+      tempo: '1–4 horas',
+    },
+    // CHAMADO 11 – Recepção: webcam parou após atualização
+    {
+      setor: 'Recepção',
+      classificacao: 'Incidente',
+      prioridade: 'Baixa',
+      impacto: 'Baixo — Usuário único',
+      causa: 'Webcam deixou de funcionar após atualização do sistema operacional. Possível incompatibilidade de driver com a nova versão do SO.',
+      diagnostico: 'Verificar gerenciador de dispositivos em busca de erros no dispositivo de câmera. Checar se driver da webcam é compatível com a versão atual do sistema. Testar a câmera em outro computador para descartar defeito físico.',
+      solucao: 'Reinstalar driver da webcam compatível com a versão atual do SO (obtido no site do fabricante). Se não houver driver compatível, reverter atualização do sistema ou solicitar driver em modo de compatibilidade.',
+      tempo: '1–4 horas',
+    },
+    // CHAMADO 12 – RH: certificado digital expirado
+    {
+      setor: 'Recursos Humanos',
+      classificacao: 'Problema',
+      prioridade: 'Alta',
+      impacto: 'Alto — Múltiplos setores',
+      causa: 'Certificado digital utilizado para assinaturas eletrônicas expirou. Documentos e processos que dependem de assinatura digital estão bloqueados.',
+      diagnostico: 'Confirmar data de expiração no repositório de certificados. Verificar quais processos e sistemas dependem do certificado. Identificar a autoridade certificadora (AC) responsável pela emissão.',
+      solucao: 'Acionar imediatamente o processo de renovação do certificado digital junto à autoridade certificadora. Verificar se há certificado de backup válido. Documentar processos impactados e acionar responsáveis para assinaturas emergenciais por método alternativo.',
       tempo: '1–2 dias',
-      setor: 'RH',
+    },
+    // CHAMADO 13 – Financeiro: phishing / e-mail suspeito
+    {
+      setor: 'Financeiro',
+      classificacao: 'Incidente',
+      prioridade: 'Crítica',
+      impacto: 'Crítico — Empresa toda',
+      causa: 'Usuários do Financeiro clicaram em link de e-mail phishing solicitando troca de senha. Risco crítico de comprometimento de credenciais e dados financeiros sensíveis.',
+      diagnostico: 'Identificar imediatamente quais usuários clicaram no link. Verificar se credenciais foram inseridas na página falsa. Analisar logs de acesso para atividades suspeitas. Verificar integridade das contas comprometidas no AD.',
+      solucao: 'Bloquear e redefinir senhas de todas as contas potencialmente comprometidas. Isolar estações que acessaram o link suspeito para análise forense. Notificar equipe de segurança. Acionar protocolo de resposta a incidentes. Informar gestão e, se necessário, autoridades.',
+      tempo: '< 1 hora',
+    },
+    // CHAMADO 14 – Comercial: configurar notebook novo
+    {
+      setor: 'Comercial',
+      classificacao: 'Requisição',
+      prioridade: 'Baixa',
+      impacto: 'Baixo — Usuário único',
+      causa: 'Notebook novo adquirido precisa ser configurado para novo colaborador do setor Comercial.',
+      diagnostico: 'Verificar checklist de provisionamento: imagem de SO padrão, softwares corporativos, ingresso no domínio, criação de conta de usuário, configuração de e-mail e VPN.',
+      solucao: 'Aplicar imagem padrão da empresa via WDS/MDM. Instalar softwares necessários (sistema de vendas, Office, antivírus). Ingressar no domínio. Criar conta no AD. Configurar e-mail e acesso remoto. Entregar ao colaborador com termo de responsabilidade.',
+      tempo: '1–2 dias',
+    },
+    // CHAMADO 15 – Produção: computador reinicia sozinho
+    {
+      setor: 'Produção',
+      classificacao: 'Problema',
+      prioridade: 'Alta',
+      impacto: 'Médio — Um setor',
+      causa: 'Computador de monitoramento da Produção reinicia sozinho de forma intermitente. Possível superaquecimento, falha em memória RAM, PSU instável ou driver com problema.',
+      diagnostico: 'Analisar logs de eventos do Windows (Event Viewer) em busca de erros críticos. Verificar temperatura da CPU/GPU com HWMonitor. Executar teste de memória RAM (MemTest86). Checar status da PSU e conexões internas.',
+      solucao: 'Limpar cooler e aplicar pasta térmica se superaquecimento. Substituir pente de RAM defeituoso. Trocar PSU se instável. Atualizar drivers de chipset. Se problema persistir, substituir equipamento para não comprometer o monitoramento da produção.',
+      tempo: '4–8 horas',
+    },
+    // CHAMADO 16 – Diretoria: acesso negado a pasta compartilhada
+    {
+      setor: 'Diretoria',
+      classificacao: 'Requisição',
+      prioridade: 'Alta',
+      impacto: 'Médio — Um setor',
+      causa: 'Usuário da Diretoria com acesso negado a pasta compartilhada na rede. Possível alteração indevida de permissões, conta fora do grupo de segurança ou herança de permissões incorreta.',
+      diagnostico: 'Verificar permissões NTFS e de compartilhamento da pasta no servidor de arquivos. Confirmar se a conta do usuário está no grupo de segurança correto no AD. Checar logs de auditoria para alterações recentes de permissão.',
+      solucao: 'Adicionar usuário ao grupo de segurança adequado no Active Directory. Corrigir permissões NTFS se alteradas indevidamente. Documentar e registrar a alteração no change log. Verificar quem alterou a permissão anteriormente.',
+      tempo: '< 1 hora',
+    },
+    // CHAMADO 17 – Marketing: licença de software expirada
+    {
+      setor: 'Marketing',
+      classificacao: 'Problema',
+      prioridade: 'Média',
+      impacto: 'Médio — Um setor',
+      causa: 'Software de edição gráfica com licença expirada, bloqueando atividades de criação do setor de Marketing.',
+      diagnostico: 'Verificar data de expiração da licença no painel de licenciamento. Confirmar se é licença por assinatura (renovação) ou perpétua (upgrade). Verificar se há outras licenças disponíveis no pool da empresa.',
+      solucao: 'Renovar assinatura junto ao fornecedor do software. Se houver licença disponível no pool, reatribuí-la ao usuário. Verificar orçamento de TI para renovação. Como alternativa temporária, avaliar uso de licença de outro computador não utilizado.',
+      tempo: '1–2 dias',
+    },
+    // CHAMADO 18 – Atendimento: computador lento com propagandas (malware)
+    {
+      setor: 'Atendimento',
+      classificacao: 'Incidente',
+      prioridade: 'Crítica',
+      impacto: 'Alto — Múltiplos setores',
+      causa: 'Computador do setor de Atendimento extremamente lento com exibição de janelas de propaganda — sintomas claros de infecção por adware/malware. Risco de vazamento de dados e propagação na rede.',
+      diagnostico: 'Isolar imediatamente o equipamento da rede. Executar varredura completa com antivírus atualizado e ferramenta anti-malware (Malwarebytes). Verificar processos suspeitos no Task Manager. Analisar extensões de navegador e programas instalados recentemente.',
+      solucao: 'Isolar máquina da rede imediatamente. Executar remoção do malware ou, se comprometimento profundo, formatar e reinstalar o SO com imagem limpa. Verificar se outros computadores da rede foram afetados. Revisar políticas de segurança e navegação.',
+      tempo: '4–8 horas',
+    },
+    // CHAMADO 19 – Almoxarifado: leitor de código de barras não reconhecido
+    {
+      setor: 'Almoxarifado',
+      classificacao: 'Incidente',
+      prioridade: 'Baixa',
+      impacto: 'Baixo — Usuário único',
+      causa: 'Leitor de código de barras do Almoxarifado não é reconhecido pelo computador. Possível falha no cabo USB, porta USB com problema ou ausência de driver.',
+      diagnostico: 'Testar o leitor em outra porta USB do mesmo computador. Testar em outro computador para verificar se o defeito é no leitor ou na porta. Verificar gerenciador de dispositivos. Checar se há necessidade de driver específico do fabricante.',
+      solucao: 'Substituir cabo USB se danificado. Instalar driver do fabricante se necessário. Se a porta USB estiver com defeito, usar hub USB externo. Se o leitor estiver com defeito físico, substituir pelo equipamento reserva.',
+      tempo: '1–4 horas',
+    },
+    // CHAMADO 20 – Infraestrutura: múltiplos computadores sem acesso a recursos compartilhados
+    {
+      setor: 'Infraestrutura',
+      classificacao: 'Incidente',
+      prioridade: 'Crítica',
+      impacto: 'Crítico — Empresa toda',
+      causa: 'Diversos computadores de múltiplos setores perderam acesso a recursos compartilhados da rede (pastas, impressoras, sistemas). Possível falha no servidor de arquivos, controlador de domínio, switch core ou serviço DHCP/DNS.',
+      diagnostico: 'Verificar status do controlador de domínio e servidor de arquivos (ping, serviços, logs). Checar disponibilidade do DHCP e DNS. Analisar logs do switch core em busca de erros de porta ou STP. Mapear quais segmentos de rede estão afetados.',
+      solucao: 'Reiniciar serviços críticos do AD (Netlogon, DNS, DHCP) se parados. Se falha de hardware no switch core, ativar equipamento de contingência. Comunicar todos os gestores. Acionar plano de continuidade de negócios enquanto serviços são restaurados.',
+      tempo: '< 1 hora',
     },
   ];
  
   seeds.forEach(s => {
-    chamados.push({ id: genId(), ...s, criadoEm: new Date(Date.now() - Math.random() * 86400000 * 3).toISOString() });
+    chamados.push({ id: genId(), ...s, criadoEm: new Date(Date.now() - Math.random() * 86400000 * 2).toISOString() });
   });
   save();
 }
